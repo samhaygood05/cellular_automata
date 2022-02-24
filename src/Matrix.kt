@@ -1,3 +1,5 @@
+import Constants.CGoL_KERNEL
+import Constants.CGoL_FUNCTION
 import kotlin.math.pow
 
 typealias Matrix = Grid<Double>
@@ -189,5 +191,7 @@ fun Matrix.kernel(kernel: Matrix, overflow: (Matrix, Int, Int) -> Double, operat
     }
     return Matrix(row.toTypedArray())
 }
+
+fun Matrix.CGoL(overflow: (Matrix, Int, Int) -> Double) = kernel(CGoL_KERNEL, overflow, CGoL_FUNCTION)
 
 

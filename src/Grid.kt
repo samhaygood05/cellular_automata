@@ -28,12 +28,6 @@ class Grid<T> {
     val isSquare: Boolean get() = rows == columns
 
     fun getCenter() = arrayListOf(ceil(rows/2.0).toInt(), ceil(columns/2.0).toInt())
-    fun fromCenter(i: Int, j: Int, overflow: T): T {
-        val row = getCenter()[0] + i
-        val column = getCenter()[1] + j
-        return if (row < 0 || column < 0 || row >= rows || column >= columns) overflow
-        else grid[row][column]
-    }
 
     @Suppress("UNCHECKED_CAST") infix fun concatenate(that: Grid<Any?>): Grid<Any?> {
         require(rows == that.rows) { "Grids are not Combinable" }

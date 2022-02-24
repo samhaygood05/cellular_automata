@@ -1,43 +1,44 @@
+import Constants.LOOP
+import Constants.SHOW_TRAILS
+import Constants.TRAIL_LENGTH
+import Constants.value
 import java.awt.Color
 import java.awt.Graphics
-import java.awt.color.ColorSpace
 
 fun main() {
 
-    println(grid)
     val fr = Draw()
 }
 
-fun color(that: Any?): Color {
+fun color(that: Any?, trails: Boolean): Color {
     return when (that) {
         is Color -> that
-        is Double -> Color(that.toFloat(), that.toFloat(), that.toFloat())
+        is Double -> Color(that.toFloat(), that.toFloat(), that.toFloat(), if (that <= 0.0 && trails) 1 / TRAIL_LENGTH else 1.0f)
         else -> Color.BLACK
     }
 }
 
-fun draw(g: Graphics, that: Array<Array<Any?>>, blockSize: Int) {
+fun draw(g: Graphics, that: Array<Array<Any?>>, blockSize: Int, trails: Boolean = true) {
     for (y in that.indices) {
         for (x in that[y].indices) {
-            g.color = color(that[y][x])
+            g.color = color(that[y][x], trails)
             g.fillRect(x * blockSize, y * blockSize, blockSize, blockSize)
         }
     }
 }
-
-fun computeAndDraw(g: Graphics, that: Array<Array<Any?>>, blockSize: Int) {
-    while (true) {
-        draw(g, grid.grid as Array<Array<Any?>>, blockSize)
-
-        Thread.sleep(125)
-
-        grid = grid.kernel(kernel, LOOP) { ij: Double, item: Double ->
-            when {
-                (item > 0.0 && ij in 2.0..3.0) || (item <= 0.0 && ij == 3.0) -> 1.0
-                else -> 0.0
-            }
-        }
-    }
+@Suppress("UNCHECKED_CAST") fun draw(g: Graphics, that: Array<Array<Double>>, blockSize: Int, trails: Boolean) {
+    draw(g, that as Array<Array<Any?>>, blockSize, trails)
 }
 
-val LOOP: (Matrix, Int, Int) -> Double = {grid: Matrix, i: Int, j: Int -> grid.grid[i.mod(grid.rows)][j.mod(grid.columns)] }
+fun computeAndDraw(g: Graphics, that: Matrix, blockSize: Int) {
+    var frame = that
+    draw(g, frame.grid, blockSize, false)
+    while (true) {
+        frame = frame.CGoL(LOOP)
+
+        Thread.sleep(100)
+
+        draw(g, frame.grid, blockSize, SHOW_TRAILS)
+
+    }
+}
