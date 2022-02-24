@@ -176,16 +176,16 @@ fun Matrix.kernel(kernel: Matrix, overflow: (Matrix, Int, Int) -> Double, operat
     for (i in this.grid.indices) {
         val column = mutableListOf<Double>()
         for (j in this.grid[i].indices) {
-            var ij = 0.0
+            var kernalVal = 0.0
             for (k in kernel.grid.indices) {
                 val kCenter = k - center[0] + 1
                 for (l in kernel.grid[k].indices) {
                     val lCenter = l - center[1] + 1
-                    ij += kernel.grid[k][l] * if (i + kCenter < 0 || i + kCenter >= grid.size || j + lCenter < 0 || j + lCenter >= grid[i].size) overflow(this, i + kCenter, j + lCenter)
+                    kernalVal += kernel.grid[k][l] * if (i + kCenter < 0 || i + kCenter >= grid.size || j + lCenter < 0 || j + lCenter >= grid[i].size) overflow(this, i + kCenter, j + lCenter)
                     else grid[i + kCenter][j + lCenter]
                 }
             }
-            column.add(operator(ij, grid[i][j]))
+            column.add(operator(kernalVal, grid[i][j]))
         }
         row.add(column.toTypedArray())
     }

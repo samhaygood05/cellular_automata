@@ -42,9 +42,9 @@ object Constants {
         arrayOf(1.0, 0.0, 1.0),
         arrayOf(1.0, 1.0, 1.0)
     ))
-    @JvmField val CGoL_FUNCTION = { ij: Double, item: Double ->
+    @JvmField val CGoL_FUNCTION = { kernelVal: Double, currentVal: Double ->
         when {
-            (item > 0.0 && ij in 2.0..3.0) || (item <= 0.0 && ij == 3.0) -> 1.0
+            (currentVal > 0.0 && kernelVal in 2.0..3.0) || (currentVal <= 0.0 && kernelVal == 3.0) -> 1.0
             else -> 0.0
         }
     }
