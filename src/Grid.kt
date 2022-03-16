@@ -27,8 +27,6 @@ class Grid<T> {
     fun areSameSize(that: Grid<T>): Boolean = rows == that.rows && columns == that.columns
     val isSquare: Boolean get() = rows == columns
 
-    fun getCenter() = arrayListOf(ceil(rows/2.0).toInt(), ceil(columns/2.0).toInt())
-
     @Suppress("UNCHECKED_CAST") infix fun concatenate(that: Grid<Any?>): Grid<Any?> {
         require(rows == that.rows) { "Grids are not Combinable" }
         val row = mutableListOf<Array<Any?>>()
@@ -69,6 +67,18 @@ class Grid<T> {
 
     companion object {
         @JvmStatic fun divider(i: Int, color: Color) = Grid(i, 1) { color }
+        @JvmStatic fun <T> createGrid(i: Int, j: Int, populate: (Int, Int) -> T): Grid<T> {
+            val row = mutableListOf<Array<Any?>>()
+            for (k in 0 until i) {
+                val column = mutableListOf<Any?>()
+                for (l in 0 until j) {
+                    column.add(populate(k, l))
+                }
+                row.add(column.toTypedArray())
+            }
+            return Grid(row.toTypedArray()) as Grid<T>
+        }
+        @JvmStatic fun getCenter(rows: Int, columns: Int) = arrayListOf(ceil(rows/2.0).toInt(), ceil(columns/2.0).toInt())
     }
 }
 
